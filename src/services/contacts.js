@@ -22,17 +22,21 @@ export const deleteContact = async (contactId) => {
   return contact;
 };
 
-export const upsertContact = async (contactId, payload, options = {}) => {
+export const upsertContact = async (contactId, payload, options = {}, isPatch = false) => {
+  const updateOperation = isPatch ? { $set: payload } : payload;
+  
   const data = await ContactsCollection.findOneAndUpdate(
     { _id: contactId },
-    { $set: payload },
+    updateOperation,
     {
       new: true,
       upsert: true,
       ...options,
     },
   );
+  
   if (!data) return null;
+  
   return {
     contact: data.value,
     isNew: Boolean(data.lastErrorObject?.upserted),
