@@ -25,16 +25,16 @@ export const deleteContact = async (contactId) => {
 export const upsertContact = async (contactId, payload, options = {}) => {
   const data = await ContactsCollection.findOneAndUpdate(
     { _id: contactId },
-    payload,
+    { $set: payload },
     {
       new: true,
-      includeResultsMetadata: true,
+      upsert: true,
       ...options,
     },
   );
-  if (!data || !data.value) return null;
+  if (!data) return null;
   return {
     contact: data.value,
-    isNew: Boolean(data?.lastErrorObject?.upserted),
+    isNew: Boolean(data.lastErrorObject?.upserted),
   };
 };
