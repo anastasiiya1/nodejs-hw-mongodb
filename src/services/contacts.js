@@ -30,15 +30,15 @@ export const upsertContact = async (contactId, payload, options = {}, isPatch = 
     updateOperation,
     {
       new: true,
-      upsert: true,
+      includeResultMetadata: true,
       ...options,
     },
   );
   
-  if (!data) return null;
+  if (!data || !data.value) return null;
   
   return {
     contact: data.value,
-    isNew: Boolean(data.lastErrorObject?.upserted),
+    isNew: Boolean(data?.lastErrorObject?.upserted),
   };
 };
