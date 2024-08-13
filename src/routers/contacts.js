@@ -17,28 +17,28 @@ import { isValid } from '../midlewares/isValid.js';
 
 const router = Router();
 
-router.get('/contacts', ctrlWrapper(getContactsController));
+router.get('/', ctrlWrapper(getContactsController));
 router.get(
-  '/contacts/:contactId',
+  '/:contactId',
   ctrlWrapper(getContactsByIdController),
 );
 router.post(
-  '/contacts',
+  '/register',
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 router.delete(
-  '/contacts/:contactId',
+  '/:contactId',
   ctrlWrapper(deleteContactController),
 );
 router.put(
-  '/contacts/:contactId',
+  '/:contactId',
   isValid,
   validateBody(createContactSchema),
   ctrlWrapper(upsertContactController),
 );
 router.patch(
-  '/contacts/:contactId',
+  '/:contactId',
   isValid,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
