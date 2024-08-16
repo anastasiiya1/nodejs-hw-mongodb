@@ -66,20 +66,19 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
     _id: sessionId,
     refreshToken,
   });
-
   if (!session) {
     throw createHttpError(401, 'Session not found');
   }
 
+
   const isSessionTokenIsExpired =
     new Date() > new Date(session.refreshTokenValidUntil);
-
   if (isSessionTokenIsExpired) {
     throw createHttpError(401, 'Session token expired');
   }
 
-  const newSession = createSession();
 
+  const newSession = createSession();
   await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
 
   return await SessionsCollection.create({

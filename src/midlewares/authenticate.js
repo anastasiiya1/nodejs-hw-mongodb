@@ -28,10 +28,10 @@ export const authenticate = async (req, res, next) => {
     return;
   }
 
-  const isAccesTTokenIsExpired =
+  const isAccessTTokenIsExpired =
     new Date() > new Date(session.accessTokenValidUntil);
 
-  if (isAccesTTokenIsExpired) {
+  if (isAccessTTokenIsExpired) {
     next(createHttpError(401, 'Access token expired'));
     return;
   }
