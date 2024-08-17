@@ -20,7 +20,7 @@ import { isUser } from '../midlewares/isUser.js';
 const router = Router();
 
 router.use(authenticate);
-router.get('/', isUser, ctrlWrapper(getContactsController));
+router.get('/', ctrlWrapper(getContactsController));
 router.get('/:contactId', isUser, ctrlWrapper(getContactsByIdController));
 router.post(
   '/register',
