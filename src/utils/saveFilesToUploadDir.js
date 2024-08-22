@@ -4,10 +4,10 @@ import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from '../constants/index.js';
 import { env } from './env.js';
 
 export const saveFileToUploadDir = async (file) => {
-  await fs.rename(
-    path.join(TEMP_UPLOAD_DIR, file.filename),
-    path.join(UPLOAD_DIR, file.filename),
-  );
+  const tempPath = path.join(TEMP_UPLOAD_DIR, file.filename);
+  const uploadPath = path.join(UPLOAD_DIR, file.filename);
+
+  await fs.rename(tempPath, uploadPath);
 
   return `${env('APP_DOMAIN')}/uploads/${file.filename}`;
 };

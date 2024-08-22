@@ -10,9 +10,9 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFilesToUploadDir.js';
-import { updateContactSchema } from '../validation/contacts.js';
+// import { updateContactSchema } from '../validation/contacts.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import { env } from '../utils/env.js';
+// import { env } from '../utils/env.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -52,21 +52,15 @@ export const getContactsByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contactId = req.user._id;
+  const userId = req.user._id;
   const photo = req.file;
   let photoUrl;
 
   if (photo) {
-    if (env('ENABLE_CLOUDINARY') === 'true') {
-      photoUrl = await saveFileToCloudinary(photo);
-    } else {
-      photoUrl = await saveFileToUploadDir(photo);
-    }
+    photoUrl = await saveFileToCloudinary(photo);
   }
-  const contact = await createContact(contactId, {
-    ...req.body,
-    photo: photoUrl,
-  });
+
+  const contact = await createContact({ ...req.body, userId, photo: photoUrl });
 
   res.status(201).json({
     status: 201,
@@ -116,25 +110,31 @@ export const patchContactController = async (req, res, next) => {
   let photoUrl;
 
   if (photo) {
-    if (env('ENABLE_CLOUDINARY') === 'true') {
-      photoUrl = await saveFileToCloudinary(photo);
-    } else {
+    try {
       photoUrl = await saveFileToUploadDir(photo);
+    } catch (err) {
+      console.log(err);
+      return next(createHttpError(500, 'Error saving photo'));
     }
   }
-  const result = await updateContactSchema(contactId, {
-    ...req.body,
-    photo: photoUrl,
-  });
 
-  if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+  try {
+    const result = await upsertContact(contactId, {
+      ...req.body,
+      photo: photoUrl, // Додаємо URL фото до оновлених даних
+    });
+
+    if (!result) {
+      return next(createHttpError(404, 'Contact not found'));
+    }
+
+    res.json({
+      status: 200,
+      message: 'Successfully patched a contact!',
+      data: result.contact,
+    });
+  } catch (err) {
+    console.log(err);
+    next(createHttpError(500, 'Error updating contact'));
   }
-
-  res.json({
-    status: 200,
-    message: 'Successfully patched a contact!',
-    data: result.contact,
-  });
 };

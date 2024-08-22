@@ -13,9 +13,9 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../validation/contacts.js';
-// import { isValid } from '../midlewares/isValid.js';
 import { authenticate } from '../midlewares/authenticate.js';
 import { upload } from '../midlewares/multer.js';
+
 
 const router = Router();
 

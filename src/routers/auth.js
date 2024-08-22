@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
   registerUserSchema,
-  requestResetWmailSchema,
+  requestResetEmailSchema,
   resetPasswordSchema,
 } from '../validation/auth.js';
 import {
@@ -36,12 +36,12 @@ router.post('/refresh', ctrlWrapper(refreshUserSessionController));
 
 router.post(
   '/send-reset-email',
-  validateBody(requestResetWmailSchema),
+  validateBody(requestResetEmailSchema),
   ctrlWrapper(requestResetEmailController),
 );
 
 router.post(
-  '/reset-password',
+  '/reset-pwd',
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
 );
