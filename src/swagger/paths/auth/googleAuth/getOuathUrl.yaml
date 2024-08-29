@@ -1,0 +1,29 @@
+tags:
+  - Auth
+summary: Get OAuth URL
+operationId: getOAuthUrl
+description: |
+  Returns the URL to initiate Google OAuth flow.
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Successfully retrieved OAuth URL
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully retrieved OAuth URL
+            data:
+              type: object
+              properties:
+                url:
+                  type: string
+  '401':
+    $ref: '../../../components/responses/401.yaml'

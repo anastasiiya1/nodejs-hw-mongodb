@@ -14,7 +14,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:3000
-  - url: https://nodejs-hw-mongodb-2-6hw.onrender.com
+  - url: https://nodejs-hw-mongodb-7hw.onrender.com
 paths:
   /contacts:
     get:
@@ -24,6 +24,32 @@ paths:
   /contacts/{id}:
     get:
       $ref: ../src/swagger/paths/contacts/{id}/get.yaml
+    patch: 
+      $ref: ../src/swagger/paths/contacts/{id}/patch.yaml
+    delete:
+      $ref: ../src/swagger/paths/contacts/{id}/delete.yaml
+    put: 
+      $ref: ../src/swagger/paths/contacts/{id}/put.yaml
+  /auth/login:
+    post:
+      $ref: ../src/swagger/paths/auth/login/postLogin.yaml
+  /auth/logout:
+    post:
+      $ref: ../src/swagger/paths/auth/logout/postLogout.yaml
+  /auth/refresh:
+    post:
+      $ref: ../src/swagger/paths/auth/refresh/postRefresh.yaml
+  /auth/send-reset-email:
+    post:
+      $ref: ../src/swagger/paths/auth/send-reset-email/postSendResetEmail.yaml
+  /auth/reset-password:
+    post:
+      $ref: ../src/swagger/paths/auth/reset-password/postResetPwd.yaml
+  /auth/googleAuth/oauth-url:
+    get:
+      $ref: ../src/swagger/paths/auth/googleAuth/getOuathUrl.yaml
+    post:
+      $ref: ../src/swagger/paths/auth/googleAuth/postGoogleLogin.yaml
 components:
   securitySchemes:
     bearerAuth:

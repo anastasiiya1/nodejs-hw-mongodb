@@ -1,0 +1,41 @@
+tags:
+  - Auth
+summary: Google login
+operationId: googleLogin
+description: |
+  Logs in a user using Google OAuth token. Returns an access token.
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          idToken:
+            type: string
+            example: google_id_token_here
+        required:
+          - idToken
+responses:
+  '200':
+    description: Successfully logged in with Google
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in with Google
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  
