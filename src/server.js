@@ -8,6 +8,7 @@ import router from './routers/index.js';
 import { errorHandler } from './midlewares/errorHandler.js';
 import { notFoundHandler } from './midlewares/notFoundHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './midlewares/swaggerDocs.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -31,13 +32,14 @@ export const setupServer = () => {
       message: 'Hello world!',
     });
   });
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   app.use(router);
 
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);
-  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

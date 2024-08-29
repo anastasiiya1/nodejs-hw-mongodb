@@ -12,6 +12,7 @@ import {
 import { SessionsCollection } from '../db/models/session.js';
 import { env } from '../utils/env.js';
 import { sendEmail } from '../utils/sendMail.js';
+import { getFullNameFromGoogle, validateCode } from '../utils/googleOauth2.js';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -167,4 +168,30 @@ export const resetPassword = async (payload) => {
   );
 
   await SessionsCollection.deleteMany({ userId: user._id });
+};
+
+export const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+
+  if (!payload) throw createHttpError(401);
+
+  let user = await UserCollection.findOne({ email: payload.email });
+
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+
+    user = await UserCollection.create({
+      email: payload.email,
+      name: getFullNameFromGoogle(payload),
+      password,
+    });
+  }
+
+  const newSession = createSession();
+
+  return await SessionsCollection.create({
+    userId: user._id,
+    ...newSession,
+  });
 };
