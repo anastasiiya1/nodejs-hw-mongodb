@@ -58,5 +58,5 @@ responses:
             message:
               type: string
               example: Error updating contact
-    '401':
+  '401':
     $ref: '../../../components/responses/401.yaml'
